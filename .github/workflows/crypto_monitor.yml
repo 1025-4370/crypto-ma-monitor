@@ -32,7 +32,7 @@ jobs:
         
     - name: Run crypto monitor
       run: |
-        python github_actions_monitor.py
+        python github_actions_monitor.py || true
       env:
         EXCHANGE: ${{ vars.EXCHANGE || 'OKX' }}
         BARK_KEY: ${{ secrets.BARK_KEY || 'bfGAYDNaqnKbASDB9FAEgE' }}
