@@ -40,7 +40,7 @@ def get_okx_kline_data(symbol, interval=KLINE_INTERVAL, limit=KLINE_LIMIT):
         ])
         
         # 转换数据类型
-        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        df['timestamp'] = pd.to_datetime(df['timestamp'].astype(float), unit='ms')
         df['close'] = df['close'].astype(float)
         
         return df
