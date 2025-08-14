@@ -1,0 +1,45 @@
+name: Crypto MA Monitor
+
+on:
+  schedule:
+    # 每15分钟运行一次
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        
+    - name: Show configuration
+      run: |
+        python config.py
+      env:
+        EXCHANGE: ${{ vars.EXCHANGE || 'OKX' }}
+        BARK_KEY: ${{ secrets.BARK_KEY || 'bfGAYDNaqnKbASDB9FAEgE' }}
+        
+    - name: Run crypto monitor
+      run: |
+        python github_actions_monitor.py
+      env:
+        EXCHANGE: ${{ vars.EXCHANGE || 'OKX' }}
+        BARK_KEY: ${{ secrets.BARK_KEY || 'bfGAYDNaqnKbASDB9FAEgE' }}
+        TZ: Asia/Shanghai
+        
+    - name: Check exit code
+      run: |
+        echo "监控脚本执行完成"
+        echo "如果有信号，脚本会返回退出码0"
+        echo "如果无信号，脚本会返回退出码1"
